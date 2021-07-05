@@ -5,17 +5,19 @@ import csv
 from fileparse import parse_csv
 def read_portfolio(filename):
  '''
-  read a stock portfolio file into a list of dictionaries with keys name shares and price.
+  read a stock portfolio file into a list of records using parse_csv function.
  '''
- portfolio=parse_csv(filename, select=['name','shares','price'], types=[str,int,float])
- return portfolio
+ with open(filename) as lines:
+  return parse_csv(lines, select=['name','shares','price'], types=[str,int,float])
+
    
 def read_price(filename):
  '''
-  read a stock price file into a dictionarie with  name  and price.
+  read a stock price file into a dictionary with name and price.
  '''
  prices={}
- pricefile= parse_csv(filename,types=[str,float],has_headers=False)
+ with open(filename) as lines:
+   pricefile= parse_csv(lines,types=[str,float],has_headers=False)
  for s in pricefile:
    prices[s[0]]=s[1]
  return prices
@@ -52,6 +54,9 @@ def portfolio_report(portfolio_filename,prices_filename):
   report=make_report(portfolio,prices)
   print_report(report)
 
-portfolio_report('Work/Data/portfolio.csv', 'Work/Data/prices.csv')
+
+
+    
+
 
 

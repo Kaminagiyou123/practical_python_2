@@ -1,24 +1,24 @@
 # fileparse.py
 import csv
-def parse_csv(filename,select=None,types=None, has_headers=True,delimiter=",",silence_error=False):
+def parse_csv(lines,select=None,types=None, has_headers=True,delimiter=",",silence_error=False):
  '''
  parse a CSV file into list of records (dicionaries or tupples depending on headers)
  '''
  if select and not has_headers:
-   raise RuntimeError('select argument requires column headers')
+    raise RuntimeError('select argument requires column headers')
+  
+ rows=csv.reader(lines,delimiter=delimiter)
  
- with open(filename) as f:
-  rows=csv.reader(f,delimiter=delimiter)
-  if has_headers:
+ if has_headers:
     headers=next(rows)
   
-  if select:
+ if select:
     indices=[headers.index(colname) for colname in select]
     headers=select
   
-  records=[]
+ records=[]
 
-  for rowno,row in enumerate(rows,start=1):
+ for rowno,row in enumerate(rows,start=1):
    if not row:
      continue
    
@@ -40,5 +40,5 @@ def parse_csv(filename,select=None,types=None, has_headers=True,delimiter=",",si
      
    records.append(record)
    
-  return records
+ return records
  
