@@ -1,9 +1,8 @@
-import report
-import gzip
-import fileparse
+import report 
+portfolio=report.read_portfolio('Work/Data/portfolio.csv')
 
-with gzip.open('Work/Data/portfolio.csv.gz','rt') as f:
+from tableformat import create_formatter, print_table
+formatter = create_formatter('txt')
+print_table(portfolio, ['name','shares'], formatter)
 
- port= fileparse.parse_csv(f,types=[str,int,float])
-
-print(port)
+print_table(portfolio, ['name','shares','price'], formatter)

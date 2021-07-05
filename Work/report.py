@@ -1,14 +1,17 @@
 # report.py
 #
 # Exercise 2.4
-import csv
+from stock import Stock
 from fileparse import parse_csv
+import tableformat 
 def read_portfolio(filename):
  '''
   read a stock portfolio file into a list of records using parse_csv function.
  '''
  with open(filename) as lines:
-  return parse_csv(lines, select=['name','shares','price'], types=[str,int,float])
+  portdicts= parse_csv(lines, select=['name','shares','price'], types=[str,int,float])
+  portfolio=[Stock(s['name'],s['shares'],s['price']) for s in portdicts]
+  return portfolio
 
    
 def read_price(filename):
@@ -29,30 +32,34 @@ def make_report(portfolio,prices):
   '''
   report=[]
   for s in portfolio:
-    row=(s['name'],s['shares'],s['price'],prices[s['name']]-s['price'])
+    row=(s.name,s.shares,s.price,prices[s.name]-s.price)
     report.append(row)
   return report
 
-def print_report(report):
+def print_report(reportdata,formatter):
   '''
   print the report (list of tuples) into a presentable format, with headers
   '''
   
-  headers= ('name','shares','price','change')
-  for a in headers:
-   print(f'{a:>10s}',end=" ") 
-  print()
-  print(('-'*10+" ")*4)
+  formatter.headings(['name','shares','price','change'])
   
-  for name,shares,price,change in report:
-    print(f'{name:>10s} {shares:10d} {price:10.2f} {change:10.2f}')
+  
+  for name,shares,price,change in reportdata:
+    rowdata=[name,str(shares),f'{price:0.2f}',f'{change:0.2f}']
+    formatter.row(rowdata)
 
-def portfolio_report(portfolio_filename,prices_filename):
-  
+def portfolio_report(portfolio_filename,prices_filename,fmt):
+  # read data files
   portfolio=read_portfolio(portfolio_filename)
   prices=read_price(prices_filename)
+  #create the report data
   report=make_report(portfolio,prices)
-  print_report(report)
+  
+  formatter=tableformat.create_formatter(fmt)
+
+  print_report(report,formatter)
+
+
 
 
 

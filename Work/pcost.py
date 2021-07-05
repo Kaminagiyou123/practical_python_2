@@ -3,25 +3,18 @@
 # Exercise 1.27
 
 import csv
+from stock import Stock
+from fileparse import parse_csv
 
 def portfolio_cost(filename):
  '''
  Computes the total cost (share*price) of a portfolio file
  '''
  total_cost=0
- with open(filename) as f:
-  rows=csv.reader(f)
-  headers=next(rows)
-  
-  for rowno,row in enumerate(rows,start=1):
-     record=dict(zip(headers,row))
-     try:
-       nshares=int(record['shares'])
-       nprice=float(record['price'])
-       total_cost+=nshares*nprice
-     except ValueError:
-      print(f'Row{rowno}: Bad row:{row}')
-      continue
+ with open(filename) as lines:
+  rows= parse_csv(lines, select=['name','shares','price'], types=[str,int,float])
+
+  total_cost= sum(row['shares']*row['price'] for row in rows)
 
  return total_cost
   
