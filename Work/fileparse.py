@@ -1,6 +1,6 @@
 # fileparse.py
 import csv
-def parse_csv(lines,select=None,types=None, has_headers=True,delimiter=",",silence_error=False):
+def parse_csv(lines,select=None,types=None, has_headers=True,delimiter=",",silence_errors=False):
  '''
  parse a CSV file into list of records (dicionaries or tupples depending on headers)
  '''
@@ -29,9 +29,10 @@ def parse_csv(lines,select=None,types=None, has_headers=True,delimiter=",",silen
      try:
       row=[func(val) for func,val in zip(types,row) ]
      except ValueError as e:
-       if silence_error==False:
+       if silence_errors==False:
         print(f'Row {rowno},Couldnt convert {row}')
         print(f'Row {rowno},{e}')
+       continue
     
    if has_headers:    
       record=dict(zip(headers,row))

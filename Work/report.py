@@ -5,13 +5,13 @@ from stock import Stock
 from fileparse import parse_csv
 import tableformat 
 from portfolio import Portfolio
-def read_portfolio(filename):
+def read_portfolio(filename,**opts):
  '''
   read a stock portfolio file into a list of records using parse_csv function.
  '''
  with open(filename) as lines:
-  portdicts= parse_csv(lines, select=['name','shares','price'], types=[str,int,float])
-  portfolio=[Stock(s['name'],s['shares'],s['price']) for s in portdicts]
+  portdicts= parse_csv(lines, select=['name','shares','price'], types=[str,int,float],**opts)
+  portfolio=[Stock(**s) for s in portdicts]
   return Portfolio(portfolio)
 
    
